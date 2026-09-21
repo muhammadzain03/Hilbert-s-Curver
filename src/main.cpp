@@ -53,6 +53,21 @@ std::vector<sf::Vector2f> generateHilbert(int order) {
 }
 
 sf::View createHilbertView(int order) {
+	// Grid runs from 0 to 2^(order - 1). Scale that box to a fixed fraction of the window size.
+	// Window size = 1024x1024  
+	const float maxCoord = static_cast<float>((1 << order) - 1);	// 2^(order - 1)
+	const float margin = 0.1f; 	// 10% empty border on each side, at every n
+	const float worldSize = maxCoord / (1.0f - 2.0f * margin);
+
+	sf::View view;
+	view.setCenter( {maxCoord/2.0f, maxCoord/2.0f} );
+	view.setSize({ worldSize, -worldSize}); // Negative height flips +Y upwards
+
+	return view;
+}
+
+/*
+sf::View createHilbertView(int order) {
 	float maxCoord = static_cast<float>((1 << order) - 1);	// 2^(order - 1)
 	float padding = 1.0f;
 	float worldSize = maxCoord + 2.0f * padding;
@@ -63,6 +78,7 @@ sf::View createHilbertView(int order) {
 
 	return view;
 }
+*/
 
 // To draw shapes on the screen, SFML requires this function (VertexArray)
 // Each element inside VertexArray is an {sf::Vertex} which packages multiples pieces of data together
